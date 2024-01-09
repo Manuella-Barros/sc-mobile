@@ -10,6 +10,7 @@ type IAppRoutes = {
     register: undefined,
     editProduct: {
         name: string
+
     }
 }
 
