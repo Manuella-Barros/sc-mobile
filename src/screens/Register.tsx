@@ -1,158 +1,82 @@
 import React from 'react';
-import { Image, Input, ScrollView, Text, View, VStack } from "native-base";
-import placeholder from "../images/placeholder.png";
+import {FormControl, ScrollView} from "native-base";
 import Button from "../components/Button";
 import Header from "../components/Header";
+import Input, {InputNametype} from "../components/Input";
+import { useForm} from "react-hook-form";
+import { z } from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+
+const inputsInfo = [
+    {
+        label: "Nome",
+        placeholder: "o nome",
+        name: "nome"
+    },
+    {
+        label: "Preço",
+        placeholder: "o preço",
+        name: "preco"
+    },
+    {
+        label: "Quantidade",
+        placeholder: "a quantidade",
+        name: "quantidade"
+    },
+    {
+        label: "Categoria",
+        placeholder: "a categoria",
+        name: "categoria"
+    },
+    {
+        label: "Imagem",
+        placeholder: "o url da imagem",
+        name: "imagem"
+    }
+]
+
+const registerSchema = z.object({
+    nome: z.string({invalid_type_error: "Deve ser um texto"}),
+    preco: z.coerce.number(),
+    quantidade: z.coerce.number(),
+    imagem: z.string().url(),
+    categoria: z.string()
+})
+
+export type RegisterSchemaType = z.infer<typeof registerSchema>
 
 function Register() {
+    const {control, handleSubmit  } = useForm<RegisterSchemaType>({
+        resolver: zodResolver(registerSchema)
+    });
+
+    function createProduct(data: RegisterSchemaType){
+        console.log(data)
+    }
+
     return (
         <ScrollView bg={"black"}>
             <Header>Cadastramento</Header>
 
-            <VStack w={"full"} px={30}>
-                <View marginY={5}>
-                    <Text
-                        color={"white"}
-                        bg={"#472EA9"}
-                        alignSelf={"flex-start"}
-                        paddingX={15}
-                        marginY={-0.5}
-                        py={3}
-                        borderTopLeftRadius={10}
-                        borderTopRightRadius={10}
-                    >Nome</Text>
-
-                    <Input
-                        placeholder={"Insira o nome do produto"}
-                        borderColor={"#472EA9"}
-                        borderWidth={3}
-                        placeholderTextColor={"#C3B9EC"}
-                        bgColor={"white"}
-                        height={45}
-                        _focus={{
-                           bgColor: "violet.300",
-                           borderColor: "#472EA9",
-                           color: "black"
-                       }}
-                    />
-                </View>
-
-
-                <View marginY={5}>
-                    <Text
-                        color={"white"}
-                        bg={"#472EA9"}
-                        alignSelf={"flex-start"}
-                        paddingX={15}
-                        marginY={-0.5}
-                        py={3}
-                        borderTopLeftRadius={10}
-                        borderTopRightRadius={10}
-                    >Preço</Text>
-
-                    <Input
-                        placeholder={"Insira o preço do produto"}
-                        borderColor={"#472EA9"}
-                        borderWidth={3}
-                        placeholderTextColor={"#C3B9EC"}
-                        bgColor={"white"}
-                        height={45}
-                        _focus={{
-                           bgColor: "violet.300",
-                           borderColor: "#472EA9",
-                           color: "black"
-                       }}
-                    />
-                </View>
-
-
-                <View marginY={5}>
-                    <Text
-                        color={"white"}
-                        bg={"#472EA9"}
-                        alignSelf={"flex-start"}
-                        paddingX={15}
-                        marginY={-0.5}
-                        py={3}
-                        borderTopLeftRadius={10}
-                        borderTopRightRadius={10}
-                    >Quantidade</Text>
-
-                    <Input
-                        placeholder={"Insira q quantida do produto em estoque"}
-                        borderColor={"#472EA9"}
-                        borderWidth={3}
-                        placeholderTextColor={"#C3B9EC"}
-                        bgColor={"white"}
-                        height={45}
-                        _focus={{
-                           bgColor: "violet.300",
-                           borderColor: "#472EA9",
-                           color: "black"
-                       }}
-                    />
-                </View>
-
-
-                <View marginY={5}>
-                    <Text
-                        color={"white"}
-                        bg={"#472EA9"}
-                        alignSelf={"flex-start"}
-                        paddingX={15}
-                        marginY={-0.5}
-                        py={3}
-                        borderTopLeftRadius={10}
-                        borderTopRightRadius={10}
-                    >Categoria</Text>
-
-                    <Input
-                        placeholder={"Insira a categoria do produto"}
-                        borderColor={"#472EA9"}
-                        borderWidth={3}
-                        placeholderTextColor={"#C3B9EC"}
-                        bgColor={"white"}
-                        height={45}
-                        _focus={{
-                           bgColor: "violet.300",
-                           borderColor: "#472EA9",
-                           color: "black"
-                       }}
-                    />
-                </View>
-
-
-
-                <View
-                    marginY={5}
-                    width={"full"}
-                    maxHeight={200}
-                >
-                    <Text
-                        color={"white"}
-                        bg={"#472EA9"}
-                        alignSelf={"flex-start"}
-                        paddingX={15}
-                        borderTopRadius={10}
-                        marginY={-0.5}
-                        py={3}
-                    >Imagem</Text>
-
-                    <Image
-                        source={placeholder}
-                        width={"full"}
-                        height={"full"}
-                        borderColor={"#472EA9"}
-                        borderWidth={3}
-                        alt={"Imagem default"}
-                    />
-                </View>
+            <FormControl px={5}>
+                {
+                    inputsInfo.map((input, i) => {
+                        return <Input
+                            key={i}
+                            label={input.label}
+                            placeholder={input.placeholder}
+                            name={input.name as InputNametype}
+                            control={control}
+                        />
+                    })
+                }
 
                 <Button
                     marginY={30}
                     bg={"#472EA9"}
+                    onPress={handleSubmit((data) => createProduct(data))}
                 > Cadastrar produto</Button>
-            </VStack>
+            </FormControl>
         </ScrollView>
     );
 }

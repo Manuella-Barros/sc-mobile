@@ -1,0 +1,1 @@
+export type TCategory = 'Enlatados' | 'Higiene Pessoal' | 'Alimentos Congelados' | 'Embalados' | 'Bebidas' | 'Hortifrúti' | 'Limpeza'

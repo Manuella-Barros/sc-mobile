@@ -1,23 +1,14 @@
 import React from 'react';
 import {HStack, Image, Text, View, VStack} from "native-base";
 import {Tag} from "phosphor-react-native";
-
-export interface IProduct{
-    name: string,
-    price: number,
-    quantity: number,
-    category: string,
-    imgURL: string,
-    createdAt?: string,
-    updatedAt?: string
-}
+import {IProduct} from "../interfaces/interfaces";
 
 function Product({name, price, quantity, category, imgURL}: IProduct) {
 
     return (
         <VStack bgColor={"#472EA9"} borderRadius={12} my={5}>
-            <View w={"full"}>
-                <Image height={240} src={imgURL} borderRadius={12} w={"full"} alt={"Imagem do produto"}/>
+            <View w={"full"} bg={'white'} borderRadius={12} overflow={'hidden'}>
+                <Image height={240} src={imgURL} borderRadius={12} resizeMode={'contain'} w={"full"} alt={"Imagem do produto"}/>
             </View>
 
             <View py={3}>
@@ -33,7 +24,7 @@ function Product({name, price, quantity, category, imgURL}: IProduct) {
                 <VStack>
                     <HStack bgColor={"white"} borderRadius={8} padding={1}>
                         <Tag size={24}/>
-                        <Text ml={2} color={"black"}>{category}</Text>
+                        <Text ml={2} color={"black"}>{category.name}</Text>
                     </HStack>
                 </VStack>
             </HStack>

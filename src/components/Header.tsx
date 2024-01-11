@@ -7,7 +7,7 @@ interface HeaderProps{
 
 function Header({ children }: HeaderProps) {
     return (
-        <View bg={"#341E8B"} mb={4} pt={4} px={30} >
+        <View bg={"#341E8B"} mb={4} pt={4} px={3} >
 
             {
                 typeof children == "string" &&
@@ -29,9 +29,9 @@ function Header({ children }: HeaderProps) {
                     mb={-4}
                     p={4}
                     bg={"#472EA9"}
-                    w={40}
+                    w={"full"}
                 >
-                    <View>{children}</View>
+                    {children}
                 </View>
             }
         </View>
