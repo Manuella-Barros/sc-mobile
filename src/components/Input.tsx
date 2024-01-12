@@ -11,7 +11,7 @@ interface IInput {
     control: Control<RegisterSchemaType>
 }
 
-export type InputNametype = "nome" | "preco" | "quantidade" | "imagem" | "categoria";
+export type InputNametype = "name" | "price" | "quantity" | "imgURL" | "categoryId";
 
 function Input({label, placeholder, name, control}: IInput) {
     const {field} = useController({

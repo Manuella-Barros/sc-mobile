@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {FormControl, ScrollView} from "native-base";
 import Button from "../components/Button";
 import Header from "../components/Header";
@@ -6,52 +6,62 @@ import Input, {InputNametype} from "../components/Input";
 import { useForm} from "react-hook-form";
 import { z } from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {GlobalContext} from "../context/GlobalContext";
+import {createProduct} from "../api/nest/POST/createProduct";
+import SelectDropdownComponent from "../components/SelectDropdownComponent";
 
 const inputsInfo = [
     {
         label: "Nome",
         placeholder: "o nome",
-        name: "nome"
+        name: "name"
     },
     {
         label: "Preço",
         placeholder: "o preço",
-        name: "preco"
+        name: "price"
     },
     {
         label: "Quantidade",
         placeholder: "a quantidade",
-        name: "quantidade"
-    },
-    {
-        label: "Categoria",
-        placeholder: "a categoria",
-        name: "categoria"
+        name: "quantity"
     },
     {
         label: "Imagem",
         placeholder: "o url da imagem",
-        name: "imagem"
+        name: "imgURL"
     }
 ]
 
 const registerSchema = z.object({
-    nome: z.string({invalid_type_error: "Deve ser um texto"}),
-    preco: z.coerce.number(),
-    quantidade: z.coerce.number(),
-    imagem: z.string().url(),
-    categoria: z.string()
+    name: z.string({required_error: "Preencha esse campo", invalid_type_error: "Preencha com uma palavra ou frase"}),
+    price: z.coerce.number({required_error: "Preencha esse campo", }),
+    quantity: z.coerce.number({required_error: "Preencha esse campo", }),
+    imgURL: z.string({required_error: "Preencha esse campo"}).url({message: "Preencha com uma url"}),
 })
 
 export type RegisterSchemaType = z.infer<typeof registerSchema>
 
 function Register() {
-    const {control, handleSubmit  } = useForm<RegisterSchemaType>({
+    const {control, handleSubmit  , formState:{errors}, reset} = useForm<RegisterSchemaType>({
         resolver: zodResolver(registerSchema)
     });
+    const [categoryId, setCategoryId] = useState<number | null>(null);
+    const {setProducts} = useContext(GlobalContext);
 
-    function createProduct(data: RegisterSchemaType){
-        console.log(data)
+    function createProductForm(data: RegisterSchemaType){
+        if(categoryId){
+            reset();
+
+            createProduct({...data, categoryId}).then(res => {
+                setProducts(prevState => {
+                    if(prevState){
+                        return [res, ...prevState]
+                    }
+                    return [res]
+                })
+            })
+        }
     }
 
     return (
@@ -71,10 +81,12 @@ function Register() {
                     })
                 }
 
+                <SelectDropdownComponent setSelectedItemID={setCategoryId}/>
+
                 <Button
                     marginY={30}
                     bg={"#472EA9"}
-                    onPress={handleSubmit((data) => createProduct(data))}
+                    onPress={handleSubmit((data) => createProductForm(data))}
                 > Cadastrar produto</Button>
             </FormControl>
         </ScrollView>
