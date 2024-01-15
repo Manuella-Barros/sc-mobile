@@ -5,18 +5,24 @@ import {IProduct} from "../interfaces/interfaces";
 import Button from "./Button";
 import {deleteProduct} from "../api/nest/DELETE/deleteProduct";
 import {GlobalContext} from "../context/GlobalContext";
+import {TNavigation} from "../routes/AppRoutes";
 
-function Product({navigation, id, name, price, quantity, category, imgURL}: IProduct) {
+interface IProductProps {
+    navigation: TNavigation,
+    props: IProduct
+}
+
+function Product({navigation, ...props}: IProductProps) {
     const {setProducts} = useContext(GlobalContext);
 
     function deleteProductbyID(){
-        if(id)
-            deleteProduct(id)
+        if(props.props.id)
+            deleteProduct(props.props.id)
                 .then(() => {
                     setProducts(prevState => {
                         if(prevState){
                             return prevState.filter(prod => {
-                                if(prod.id != id){
+                                if(prod.id != props.props.id){
                                     return prod;
                                 }
                             })
@@ -28,7 +34,8 @@ function Product({navigation, id, name, price, quantity, category, imgURL}: IPro
     }
 
     function edit(){
-        navigation.navigate("editProduct", { id })
+        if(props.props.id)
+            navigation.navigate("editProduct", { id: props.props.id })
     }
 
     return (
@@ -43,23 +50,23 @@ function Product({navigation, id, name, price, quantity, category, imgURL}: IPro
                         <NotePencil size={30} color={"white"} weight={"bold"}/>
                     </Button>
                 </HStack>
-                <Image height={240} src={imgURL} borderRadius={12} resizeMode={'contain'} w={"full"} alt={"Imagem do produto"}/>
+                <Image height={240} src={props.props.imgURL} borderRadius={12} resizeMode={'contain'} w={"full"} alt={"Imagem do produto"}/>
             </View>
 
             <View py={3}>
-                <Text color={"white"} textAlign={"center"} fontSize={20}>{name}</Text>
+                <Text color={"white"} textAlign={"center"} fontSize={20}>{props.props.name}</Text>
             </View>
 
             <HStack justifyContent={"space-between"} bgColor={"black"} m={1} p={15} borderBottomRadius={12}>
                 <VStack>
-                    <Text color={"white"} paddingBottom={15}>R${price},00</Text>
-                    <Text color={"#2CA42A"}>{quantity} em estoque</Text>
+                    <Text color={"white"} paddingBottom={15}>R${props.props.price},00</Text>
+                    <Text color={"#2CA42A"}>{props.props.quantity} em estoque</Text>
                 </VStack>
 
                 <VStack>
                     <HStack bgColor={"white"} borderRadius={8} padding={1}>
                         <Tag size={24}/>
-                        <Text ml={2} color={"black"}>{category?.name}</Text>
+                        <Text ml={2} color={"black"}>{props.props.category?.name}</Text>
                     </HStack>
                 </VStack>
             </HStack>

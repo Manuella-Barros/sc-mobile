@@ -4,15 +4,14 @@ import Header from "../components/Header";
 import Product from "../components/Product";
 import {MagnifyingGlass} from "phosphor-react-native";
 import Button from "../components/Button";
-import {getAllProducts} from "../api/nest/GET/getAllProducts";
-import SelectDropdown from "react-native-select-dropdown";
-import {ICategories, IProduct} from "../interfaces/interfaces";
+import {IProduct} from "../interfaces/interfaces";
 import {getAllProductsbyCategory} from "../api/nest/GET/getAllProductsbyCategory";
 import {GlobalContext} from "../context/GlobalContext";
 import SelectDropdownComponent from "../components/SelectDropdownComponent";
+import {TNavigation} from "../routes/AppRoutes";
 
-function Home({navigation} ) {
-    const [filter, setFilter] = useState<number | null>(null);
+function Home({navigation}: {navigation: TNavigation} ) {
+    const [filter, setFilter] = useState<number | null | undefined>(null);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[] | null>(null);
     const {products} = useContext(GlobalContext);
 

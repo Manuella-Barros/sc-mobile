@@ -13,10 +13,11 @@ import {getProductbyID} from "../api/nest/GET/getProductbyID";
 import {FormSchemaType} from "../types/type";
 import {editProduct} from "../api/nest/UPDATE/editProduct";
 import {boolean} from "zod";
+import {TEditProductScreenRouteProp, TNavigation} from "../routes/AppRoutes";
 
 const editSchema = formSchema.partial();
 
-function EditProduct({route}) {
+function EditProduct({route}: {route: TEditProductScreenRouteProp}) {
     const [productInfo, setProductInfo] = useState<IProduct | null>(null);
     const [categoryId, setCategoryId] = useState<number | null | undefined>(null);
 
