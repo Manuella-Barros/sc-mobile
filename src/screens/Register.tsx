@@ -4,52 +4,24 @@ import Button from "../components/Button";
 import Header from "../components/Header";
 import Input, {InputNametype} from "../components/Input";
 import { useForm} from "react-hook-form";
-import { z } from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {GlobalContext} from "../context/GlobalContext";
 import {createProduct} from "../api/nest/POST/createProduct";
 import SelectDropdownComponent from "../components/SelectDropdownComponent";
+import {inputsInfo} from "../inputsObject";
+import {formSchema} from "../schemas/schemas";
+import {FormSchemaType} from "../types/type";
 
-const inputsInfo = [
-    {
-        label: "Nome",
-        placeholder: "o nome",
-        name: "name"
-    },
-    {
-        label: "Preço",
-        placeholder: "o preço",
-        name: "price"
-    },
-    {
-        label: "Quantidade",
-        placeholder: "a quantidade",
-        name: "quantity"
-    },
-    {
-        label: "Imagem",
-        placeholder: "o url da imagem",
-        name: "imgURL"
-    }
-]
-
-const registerSchema = z.object({
-    name: z.string({required_error: "Preencha esse campo", invalid_type_error: "Preencha com uma palavra ou frase"}),
-    price: z.coerce.number({required_error: "Preencha esse campo", }),
-    quantity: z.coerce.number({required_error: "Preencha esse campo", }),
-    imgURL: z.string({required_error: "Preencha esse campo"}).url({message: "Preencha com uma url"}),
-})
-
-export type RegisterSchemaType = z.infer<typeof registerSchema>
+const registerSchema = formSchema.strict();
 
 function Register() {
-    const {control, handleSubmit  , formState:{errors}, reset} = useForm<RegisterSchemaType>({
+    const {control, handleSubmit  , formState:{errors}, reset} = useForm<FormSchemaType>({
         resolver: zodResolver(registerSchema)
     });
-    const [categoryId, setCategoryId] = useState<number | null>(null);
+    const [categoryId, setCategoryId] = useState<number | null  | undefined>(null);
     const {setProducts} = useContext(GlobalContext);
 
-    function createProductForm(data: RegisterSchemaType){
+    function createProductForm(data: FormSchemaType){
         if(categoryId){
             reset();
 

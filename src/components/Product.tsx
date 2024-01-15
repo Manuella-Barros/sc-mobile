@@ -5,9 +5,8 @@ import {IProduct} from "../interfaces/interfaces";
 import Button from "./Button";
 import {deleteProduct} from "../api/nest/DELETE/deleteProduct";
 import {GlobalContext} from "../context/GlobalContext";
-import {useNavigation} from "@react-navigation/native";
 
-function Product({id, name, price, quantity, category, imgURL}: IProduct) {
+function Product({navigation, id, name, price, quantity, category, imgURL}: IProduct) {
     const {setProducts} = useContext(GlobalContext);
 
     function deleteProductbyID(){
@@ -29,7 +28,7 @@ function Product({id, name, price, quantity, category, imgURL}: IProduct) {
     }
 
     function edit(){
-
+        navigation.navigate("editProduct", { id })
     }
 
     return (
@@ -40,7 +39,7 @@ function Product({id, name, price, quantity, category, imgURL}: IProduct) {
                         <Trash size={30} color={"white"} weight={"bold"}/>
                     </Button>
 
-                    <Button backgroundColor={"green.500"} marginLeft={4}>
+                    <Button backgroundColor={"green.500"} marginLeft={4} onPress={edit}>
                         <NotePencil size={30} color={"white"} weight={"bold"}/>
                     </Button>
                 </HStack>

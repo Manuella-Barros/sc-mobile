@@ -9,12 +9,12 @@ type IAppRoutes = {
     home: undefined,
     register: undefined,
     editProduct: {
-        name: string
-
+        id: string
     }
 }
 
 export type TNavigation = BottomTabNavigationProp<IAppRoutes>
+
 function AppRoutes() {
     const { Screen, Navigator} = createBottomTabNavigator<IAppRoutes>();
     return (

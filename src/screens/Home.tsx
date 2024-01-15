@@ -11,7 +11,7 @@ import {getAllProductsbyCategory} from "../api/nest/GET/getAllProductsbyCategory
 import {GlobalContext} from "../context/GlobalContext";
 import SelectDropdownComponent from "../components/SelectDropdownComponent";
 
-function Home() {
+function Home({navigation} ) {
     const [filter, setFilter] = useState<number | null>(null);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[] | null>(null);
     const {products} = useContext(GlobalContext);
@@ -43,6 +43,7 @@ function Home() {
                         !filteredProducts && products &&
                         products.map(product => {
                             return <Product
+                                navigation={navigation}
                                 id={product.id}
                                 name={product.name}
                                 category={product.category}

@@ -4,7 +4,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import {GlobalContext} from "../context/GlobalContext";
 
 interface ISelectDropdown {
-    setSelectedItemID:  React.Dispatch<React.SetStateAction<number | null>>
+    setSelectedItemID:  React.Dispatch<React.SetStateAction<number | null | undefined>>
 }
 
 function SelectDropdownComponent({setSelectedItemID}: ISelectDropdown) {
