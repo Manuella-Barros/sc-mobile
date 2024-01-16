@@ -4,18 +4,17 @@ import Home from "../screens/Home";
 import Register from "../screens/Register";
 import EditProduct from "../screens/EditProduct";
 import {House, NotePencil} from "phosphor-react-native";
-import {RouteProp} from "@react-navigation/native";
+import {IProduct} from "../interfaces/interfaces";
 
 type IAppRoutes = {
     home: undefined,
     register: undefined,
     editProduct: {
-        id: string
+        product: IProduct
     }
 }
 
 export type TNavigation = BottomTabNavigationProp<IAppRoutes>
-export type TEditProductScreenRouteProp = RouteProp<IAppRoutes, "editProduct">
 
 function AppRoutes() {
     const { Screen, Navigator} = createBottomTabNavigator<IAppRoutes>();

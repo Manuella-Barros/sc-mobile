@@ -8,9 +8,8 @@ import {IProduct} from "../interfaces/interfaces";
 import {getAllProductsbyCategory} from "../api/nest/GET/getAllProductsbyCategory";
 import {GlobalContext} from "../context/GlobalContext";
 import SelectDropdownComponent from "../components/SelectDropdownComponent";
-import {TNavigation} from "../routes/AppRoutes";
 
-function Home({navigation}: {navigation: TNavigation} ) {
+function Home() {
     const [filter, setFilter] = useState<number | null | undefined>(null);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[] | null>(null);
     const {products} = useContext(GlobalContext);
@@ -42,10 +41,10 @@ function Home({navigation}: {navigation: TNavigation} ) {
                         !filteredProducts && products &&
                         products.map(product => {
                             return <Product
-                                navigation={navigation}
                                 id={product.id}
                                 name={product.name}
                                 category={product.category}
+                                categoryId={product.categoryId}
                                 imgURL={product.imgURL}
                                 price={product.price}
                                 quantity={product.quantity}
@@ -56,6 +55,7 @@ function Home({navigation}: {navigation: TNavigation} ) {
                         filteredProducts &&
                         filteredProducts.map(product => {
                             return <Product
+                                id={product.id}
                                 name={product.name}
                                 category={product.category}
                                 imgURL={product.imgURL}

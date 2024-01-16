@@ -1,55 +1,40 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {FormControl, Image, ScrollView, Text, View, VStack} from "native-base";
+import {FormControl, Image, ScrollView, Text, View, VStack, Input as InputNativeBase} from "native-base";
 import Button from "../components/Button";
 import Header from "../components/Header";
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {formSchema} from "../schemas/schemas";
 import {inputsInfo} from "../inputsObject";
-import Input, {InputNametype} from "../components/Input";
 import SelectDropdownComponent from "../components/SelectDropdownComponent";
 import {IProduct} from "../interfaces/interfaces";
-import {getProductbyID} from "../api/nest/GET/getProductbyID";
 import {FormSchemaType} from "../types/type";
 import {editProduct} from "../api/nest/UPDATE/editProduct";
-import {boolean} from "zod";
-import {TEditProductScreenRouteProp, TNavigation} from "../routes/AppRoutes";
+import {useRoute} from "@react-navigation/native";
+import Input, {InputNametype} from "../components/Input";
 
 const editSchema = formSchema.partial();
 
-function EditProduct({route}: {route: TEditProductScreenRouteProp}) {
-    const [productInfo, setProductInfo] = useState<IProduct | null>(null);
-    const [categoryId, setCategoryId] = useState<number | null | undefined>(null);
+function EditProduct() {
+    const route = useRoute();
+    const {product} = route.params as {product: IProduct};
+    const [categoryId, setCategoryId] = useState<number | null | undefined>(product.categoryId);
 
-    useEffect(() => {
-        getProductbyID(route.params.id).then((res) => {
-            setProductInfo(res);
-            setCategoryId(productInfo?.categoryId)
-            console.log(res)
-        })
-    }, []);
-
-    const {setValue, control, handleSubmit  , formState:{errors}, reset} = useForm<FormSchemaType>({
+    const {control, handleSubmit  , } = useForm<FormSchemaType>({
         resolver: zodResolver(editSchema),
-        resetOptions: {
-            keepDirtyValues: true, // user-interacted input will be retained
-            keepErrors: true, // input errors will be retained with value update
-        },
+        defaultValues: {
+            name: product.name,
+            imgURL: product.imgURL,
+            quantity: product.quantity,
+            price: product.price
+        }
     });
 
-    useEffect(() => {
-        if(productInfo){
-            setValue("name", productInfo?.name);
-            setValue("imgURL", productInfo?.imgURL);
-            setValue("price", productInfo?.price);
-            setValue("quantity", productInfo?.quantity);
-        }
-    }, [productInfo]);
 
     function editProductForm(data: IProduct) {
         if(categoryId){
             editProduct({
-                id: productInfo?.id,
+                id: product?.id,
                 categoryId,
                 ...data
             }).then(res => console.log(res))
@@ -61,6 +46,7 @@ function EditProduct({route}: {route: TEditProductScreenRouteProp}) {
             <Header>Editar</Header>
 
             <FormControl px={5}>
+
                 {
                     inputsInfo.map((input, i) => {
                         return <Input
@@ -79,7 +65,7 @@ function EditProduct({route}: {route: TEditProductScreenRouteProp}) {
                     marginY={30}
                     bg={"#472EA9"}
                     onPress={handleSubmit((data) => editProductForm(data))}
-                > Cadastrar produto</Button>
+                > Editar produto</Button>
             </FormControl>
         </ScrollView>
     );
