@@ -4,10 +4,11 @@ import SelectDropdown from "react-native-select-dropdown";
 import {GlobalContext} from "../context/GlobalContext";
 
 interface ISelectDropdown {
-    setSelectedItemID:  React.Dispatch<React.SetStateAction<number | null | undefined>>
+    setSelectedItemID:  React.Dispatch<React.SetStateAction<number | null | undefined>>,
+    defaultText?: string,
 }
 
-function SelectDropdownComponent({setSelectedItemID}: ISelectDropdown) {
+function SelectDropdownComponent({setSelectedItemID, defaultText = "Categoria"}: ISelectDropdown) {
     const {categories} = useContext(GlobalContext);
 
     if(categories == null)
@@ -29,7 +30,7 @@ function SelectDropdownComponent({setSelectedItemID}: ISelectDropdown) {
                 return item.name
             }}
 
-            defaultButtonText={"Categoria"}
+            defaultButtonText={defaultText}
             buttonStyle={{
                 width: "45%",
                 borderRadius: 10

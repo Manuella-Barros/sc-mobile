@@ -2,13 +2,13 @@ import React from 'react';
 import {Text, View} from "native-base";
 import {Input as InputNativeBase} from "native-base";
 import {Control, useController} from "react-hook-form";
-import {categorySchemaType, FormSchemaType} from "../types/type";
+import {FormSchemaType} from "../types/type";
 
 interface IInput {
     label: string,
     placeholder: string,
     name: InputNametype,
-    control: Control<FormSchemaType & categorySchemaType>
+    control: Control<FormSchemaType>
 }
 
 export type InputNametype = "name" | "price" | "quantity" | "imgURL" | "categoryId";
@@ -18,6 +18,7 @@ function Input({label, placeholder, name, control}: IInput) {
         name,
         control,
     })
+
     return (
         <View marginY={5}>
             <Text
@@ -46,7 +47,7 @@ function Input({label, placeholder, name, control}: IInput) {
                 color={"black"}
 
                 onChangeText={field.onChange}
-                value={field.value}
+                value={field.value.toString()}
             />
         </View>
     );

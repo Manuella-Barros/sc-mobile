@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FormControl, Image, ScrollView, Text, View, VStack, Input as InputNativeBase} from "native-base";
 import Button from "../components/Button";
 import Header from "../components/Header";
-import {Controller, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {formSchema} from "../schemas/schemas";
 import {inputsInfo} from "../inputsObject";
@@ -12,24 +12,35 @@ import {FormSchemaType} from "../types/type";
 import {editProduct} from "../api/nest/UPDATE/editProduct";
 import {useRoute} from "@react-navigation/native";
 import Input, {InputNametype} from "../components/Input";
-
-const editSchema = formSchema.partial();
+import {GlobalContext} from "../context/GlobalContext";
+import {getAllProducts} from "../api/nest/GET/getAllProducts";
 
 function EditProduct() {
     const route = useRoute();
     const {product} = route.params as {product: IProduct};
     const [categoryId, setCategoryId] = useState<number | null | undefined>(product.categoryId);
+    const {setProducts} = useContext(GlobalContext);
 
-    const {control, handleSubmit  , } = useForm<FormSchemaType>({
-        resolver: zodResolver(editSchema),
+    const {control, handleSubmit  , reset, formState: {errors}} = useForm<FormSchemaType>({
+        resolver: zodResolver(formSchema),
         defaultValues: {
             name: product.name,
             imgURL: product.imgURL,
             quantity: product.quantity,
             price: product.price
-        }
+        },
     });
 
+    useEffect(() => {
+        reset({
+            name: product.name,
+            imgURL: product.imgURL,
+            quantity: product.quantity,
+            price: product.price
+        })
+
+        getAllProducts().then(res => setProducts(res))
+    }, [product]);
 
     function editProductForm(data: IProduct) {
         if(categoryId){
@@ -37,7 +48,7 @@ function EditProduct() {
                 id: product?.id,
                 categoryId,
                 ...data
-            }).then(res => console.log(res))
+            })
         }
     }
 
@@ -59,7 +70,7 @@ function EditProduct() {
                     })
                 }
 
-                <SelectDropdownComponent setSelectedItemID={setCategoryId}/>
+                <SelectDropdownComponent setSelectedItemID={setCategoryId} defaultText={product.category!.name}/>
 
                 <Button
                     marginY={30}

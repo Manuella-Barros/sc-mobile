@@ -12,11 +12,17 @@ import {inputsInfo} from "../inputsObject";
 import {formSchema} from "../schemas/schemas";
 import {FormSchemaType} from "../types/type";
 
-const registerSchema = formSchema.strict();
 
 function Register() {
     const {control, handleSubmit  , formState:{errors}, reset} = useForm<FormSchemaType>({
-        resolver: zodResolver(registerSchema)
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            categoryId: 0,
+            name: '',
+            price: 0,
+            quantity: 0,
+            imgURL: ''
+        }
     });
     const [categoryId, setCategoryId] = useState<number | null  | undefined>(null);
     const {setProducts} = useContext(GlobalContext);

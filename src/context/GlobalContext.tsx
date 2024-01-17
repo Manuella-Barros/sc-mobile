@@ -14,6 +14,5 @@ export const ContextProvider = ({children}: {children: ReactNode}) =>{
         getAllProducts().then(res => setProducts(res))
     }, [])
 
-
     return <GlobalContext.Provider value={{categories, products, setProducts}}>{children}</GlobalContext.Provider>
 }
